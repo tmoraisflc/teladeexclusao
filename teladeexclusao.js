@@ -1,4 +1,4 @@
-﻿const EMAIL_DESTINO = "contato@itup.com";
+﻿const EMAIL_DESTINO = "contato@itup.com.br";
 
 const form = document.getElementById("requestForm");
 const submitBtn = document.getElementById("submitBtn");
@@ -27,7 +27,7 @@ const validators = {
     email: value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
     reason: value => Boolean(value),
     details: value => value.trim().length >= 15,
-    confirmation: () => fields.confirmation.checked
+    confirmation: value => Boolean(value)
 };
 
 const errorMessages = {
@@ -50,23 +50,39 @@ Object.values(fields).forEach(field => {
 form.addEventListener("submit", event => {
     event.preventDefault();
 
-    const isValid = validateForm();
-    if (!isValid) {
-        updateSubmitState();
+    // Valida apenas os campos obrigatórios no momento do envio
+    const requiredFields = ['fullName', 'email', 'reason', 'details', 'confirmation'];
+    let hasErrors = false;
+    
+    requiredFields.forEach(fieldId => {
+        if (!validateField(fieldId)) {
+            hasErrors = true;
+        }
+    });
+
+    if (hasErrors) {
+        // Mostra mensagem de erro mais clara
+        alert('Por favor, preencha todos os campos obrigatórios corretamente antes de enviar.');
         return;
     }
 
     const payload = buildPayload();
     triggerMailto(payload);
     showToast();
-    form.reset();
-    updateSubmitState();
+    
+    // Reset do formulário após envio bem-sucedido
+    setTimeout(() => {
+        form.reset();
+        Object.values(errorMap).forEach(el => el.textContent = "");
+        Object.values(fields).forEach(field => field.classList.remove("invalid"));
+        updateSubmitState();
+    }, 1000);
 });
 
 function validateField(fieldId) {
     if (!(fieldId in validators)) return true;
     const field = fields[fieldId];
-    const value = field.type === "checkbox" ? field.checked : field.value;
+    const value = getFieldValue(field);
     const isValid = validators[fieldId](value);
 
     if (!isValid) {
@@ -85,8 +101,22 @@ function validateForm() {
 }
 
 function updateSubmitState() {
-    const ready = validateForm();
-    submitBtn.disabled = !ready;
+    const ready = isFormReady();
+    submitBtn.classList.toggle("button--inactive", !ready);
+}
+
+function getFieldValue(field) {
+    return field.type === "checkbox" ? field.checked : field.value;
+}
+
+function isFormReady() {
+    // Validação mais permissiva - ativa o botão quando alguns campos básicos estão preenchidos
+    const basicFields = ['fullName', 'email'];
+    return basicFields.some(key => {
+        const field = fields[key];
+        const value = getFieldValue(field);
+        return value && value.toString().trim().length > 0;
+    });
 }
 
 function buildPayload() {
@@ -107,7 +137,46 @@ function buildPayload() {
 function triggerMailto(body) {
     const subject = encodeURIComponent("Solicitação de exclusão de conta");
     const encodedBody = encodeURIComponent(body + '\r\n\r\nConfirmo que autorizo a exclusão permanente da minha conta.');
-    window.location.href = `mailto:${EMAIL_DESTINO}?subject=${subject}&body=${encodedBody}`;
+    const mailtoUrl = `mailto:${EMAIL_DESTINO}?subject=${subject}&body=${encodedBody}`;
+    
+    try {
+        // Tenta abrir o cliente de email nativo (funciona em iOS, Android, Desktop)
+        if (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            // Se estiver rodando localmente, usa window.location.href
+            window.location.href = mailtoUrl;
+        } else {
+            // Para ambientes web, cria um link temporário e clica nele
+            const tempLink = document.createElement('a');
+            tempLink.href = mailtoUrl;
+            tempLink.style.display = 'none';
+            document.body.appendChild(tempLink);
+            tempLink.click();
+            document.body.removeChild(tempLink);
+        }
+    } catch (error) {
+        console.error('Erro ao abrir cliente de email:', error);
+        // Fallback: copia o email para a área de transferência
+        copyEmailToClipboard(EMAIL_DESTINO, subject, body);
+    }
+}
+
+function copyEmailToClipboard(email, subject, body) {
+    const emailText = `Para: ${email}\nAssunto: ${decodeURIComponent(subject)}\n\n${decodeURIComponent(body)}`;
+    
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(emailText).then(() => {
+            alert('Não foi possível abrir o cliente de email automaticamente. O conteúdo foi copiado para a área de transferência. Cole em seu aplicativo de email preferido.');
+        }).catch(() => {
+            showManualEmailInfo(email, subject, body);
+        });
+    } else {
+        showManualEmailInfo(email, subject, body);
+    }
+}
+
+function showManualEmailInfo(email, subject, body) {
+    const message = `Não foi possível abrir o cliente de email automaticamente.\n\nEnvie um email para:\n${email}\n\nAssunto: ${decodeURIComponent(subject)}\n\nConteúdo:\n${decodeURIComponent(body)}`;
+    alert(message);
 }
 
 function showToast() {
