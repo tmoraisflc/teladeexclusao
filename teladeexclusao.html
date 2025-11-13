@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exclusão de Conta - Confirmação</title>
+    <link rel="stylesheet" href="teladeexclusao.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+                Voltar
+            </button>
+        </div>
+
+        <div class="main-content">
+            <div class="warning-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            
+            <h1>Excluir Conta</h1>
+            <p class="subtitle">Esta ação não pode ser desfeita. Todos os seus dados serão permanentemente removidos.</p>
+            
+            <div class="consequences-box">
+                <h3>O que acontecerá:</h3>
+                <ul>
+                    <li><i class="fas fa-times-circle"></i> Todos os seus dados pessoais serão excluídos</li>
+                    <li><i class="fas fa-times-circle"></i> Histórico de atividades será removido</li>
+                    <li><i class="fas fa-times-circle"></i> Configurações e preferências serão perdidas</li>
+                    <li><i class="fas fa-times-circle"></i> Não será possível recuperar a conta</li>
+                </ul>
+            </div>
+
+            <form id="deleteForm" class="delete-form">
+                <div class="form-group">
+                    <label for="email">Para confirmar, digite seu email:</label>
+                    <input type="email" id="email" name="email" required placeholder="seu@email.com">
+                    <span class="error-message" id="emailError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Digite sua senha atual:</label>
+                    <div class="password-input">
+                        <input type="password" id="password" name="password" required placeholder="••••••••">
+                        <button type="button" class="toggle-password" onclick="togglePassword()">
+                            <i class="fas fa-eye" id="passwordIcon"></i>
+                        </button>
+                    </div>
+                    <span class="error-message" id="passwordError"></span>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="confirmation" name="confirmation" required>
+                        <span class="checkmark"></span>
+                        Eu entendo que esta ação é irreversível e confirmo a exclusão da minha conta
+                    </label>
+                    <span class="error-message" id="confirmationError"></span>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="goBack()">
+                        <i class="fas fa-arrow-left"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-danger" id="deleteBtn" disabled>
+                        <i class="fas fa-trash-alt"></i>
+                        Excluir Conta Permanentemente
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="help-section">
+            <h4>Precisa de ajuda?</h4>
+            <p>Se você está enfrentando problemas com sua conta, nossa equipe de suporte pode ajudar.</p>
+            <a href="#" class="help-link">
+                <i class="fas fa-headset"></i>
+                Contatar Suporte
+            </a>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação Final -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmação Final</h3>
+            </div>
+            <div class="modal-body">
+                <div class="warning-icon-modal">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <p>Você tem certeza absoluta que deseja excluir sua conta?</p>
+                <p class="modal-warning">Esta é sua última chance de cancelar esta ação.</p>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" onclick="closeModal()">
+                    Não, manter conta
+                </button>
+                <button type="button" class="btn-danger" onclick="confirmDeletion()">
+                    Sim, excluir definitivamente
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Processamento -->
+    <div id="loadingModal" class="modal">
+        <div class="modal-content loading-modal">
+            <div class="spinner"></div>
+            <p>Processando exclusão da conta...</p>
+        </div>
+    </div>
+
+    <script src="teladeexclusao.js"></script>
+</body>
+</html>
