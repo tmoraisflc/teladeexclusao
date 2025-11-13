@@ -369,24 +369,31 @@ textarea {
     left: 100%;
 }
 
-.actions button:disabled {
+.actions button.button--inactive {
     background: var(--muted);
-    cursor: not-allowed;
+    cursor: pointer !important;
     box-shadow: var(--shadow-sm);
-    opacity: 0.6;
+    opacity: 0.8;
+    pointer-events: auto !important;
 }
 
-.actions button:disabled::before {
+.actions button.button--inactive::before {
     display: none;
 }
 
-.actions button:not(:disabled):hover {
+/* Garante que o botão seja sempre clicável */
+.actions button {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
+.actions button:not(.button--inactive):hover {
     background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
     transform: translateY(-3px);
     box-shadow: var(--shadow-xl);
 }
 
-.actions button:not(:disabled):active {
+.actions button:not(.button--inactive):active {
     transform: translateY(-1px);
 }
 
