@@ -1,122 +1,105 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exclusão de Conta - Confirmação</title>
+    <title>Solicitação de Exclusão de Conta</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="teladeexclusao.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <button class="back-btn" onclick="goBack()">
-                <i class="fas fa-arrow-left"></i>
-                Voltar
-            </button>
-        </div>
+    <main class="page">
+        <section class="hero">
+            <p class="eyebrow">Procedimento corporativo</p>
+            <h1>Solicitação de exclusão de conta</h1>
+            <p>
+                Preencha o formulário abaixo para registrar o pedido oficial de remoção definitiva da sua conta
+                na Itup. Após o envio, nossa equipe entrará em contato no e-mail informado para confirmar a
+                identidade e concluir o processo conforme a LGPD.
+            </p>
+        </section>
 
-        <div class="main-content">
-            <div class="warning-icon">
-                <i class="fas fa-exclamation-triangle"></i>
-            </div>
-            
-            <h1>Excluir Conta</h1>
-            <p class="subtitle">Esta ação não pode ser desfeita. Todos os seus dados serão permanentemente removidos.</p>
-            
-            <div class="consequences-box">
-                <h3>O que acontecerá:</h3>
-                <ul>
-                    <li><i class="fas fa-times-circle"></i> Todos os seus dados pessoais serão excluídos</li>
-                    <li><i class="fas fa-times-circle"></i> Histórico de atividades será removido</li>
-                    <li><i class="fas fa-times-circle"></i> Configurações e preferências serão perdidas</li>
-                    <li><i class="fas fa-times-circle"></i> Não será possível recuperar a conta</li>
-                </ul>
-            </div>
-
-            <form id="deleteForm" class="delete-form">
-                <div class="form-group">
-                    <label for="email">Para confirmar, digite seu email:</label>
-                    <input type="email" id="email" name="email" required placeholder="seu@email.com">
-                    <span class="error-message" id="emailError"></span>
+        <section class="card">
+            <header class="card__header">
+                <div>
+                    <h2>Dados necessários</h2>
+                    <p>Utilizamos essas informações apenas para localizar seu cadastro e confirmar a titularidade.</p>
                 </div>
+                <span class="badge">Canal seguro</span>
+            </header>
 
-                <div class="form-group">
-                    <label for="password">Digite sua senha atual:</label>
-                    <div class="password-input">
-                        <input type="password" id="password" name="password" required placeholder="••••••••">
-                        <button type="button" class="toggle-password" onclick="togglePassword()">
-                            <i class="fas fa-eye" id="passwordIcon"></i>
-                        </button>
-                    </div>
-                    <span class="error-message" id="passwordError"></span>
-                </div>
-
-                <div class="form-group checkbox-group">
-                    <label class="checkbox-container">
-                        <input type="checkbox" id="confirmation" name="confirmation" required>
-                        <span class="checkmark"></span>
-                        Eu entendo que esta ação é irreversível e confirmo a exclusão da minha conta
+            <form id="requestForm" class="request-form" novalidate>
+                <div class="grid">
+                    <label>
+                        Nome completo
+                        <input type="text" id="fullName" name="fullName" placeholder="Seu nome" required>
+                        <span class="error" id="fullNameError"></span>
                     </label>
-                    <span class="error-message" id="confirmationError"></span>
+
+                    <label>
+                        E-mail cadastrado
+                        <input type="email" id="email" name="email" placeholder="voce@empresa.com" required>
+                        <span class="error" id="emailError"></span>
+                    </label>
                 </div>
 
-                <div class="form-actions">
-                    <button type="button" class="btn-secondary" onclick="goBack()">
-                        <i class="fas fa-arrow-left"></i>
-                        Cancelar
-                    </button>
-                    <button type="submit" class="btn-danger" id="deleteBtn" disabled>
-                        <i class="fas fa-trash-alt"></i>
-                        Excluir Conta Permanentemente
-                    </button>
+                <div class="grid">
+                    <label>
+                        Empresa / Organização (opcional)
+                        <input type="text" id="company" name="company" placeholder="Nome da empresa">
+                    </label>
+
+                    <label>
+                        ID ou usuário (se souber)
+                        <input type="text" id="accountId" name="accountId" placeholder="Ex.: 45821 ou @usuario">
+                    </label>
+                </div>
+
+                <label>
+                    Motivo principal
+                    <select id="reason" name="reason" required>
+                        <option value="" disabled selected>Selecione</option>
+                        <option value="encerramento">Encerramento da relação comercial</option>
+                        <option value="privacidade">Direito de privacidade / LGPD</option>
+                        <option value="duplicidade">Conta duplicada</option>
+                        <option value="outros">Outros</option>
+                    </select>
+                    <span class="error" id="reasonError"></span>
+                </label>
+
+                <label>
+                    Detalhes adicionais
+                    <textarea id="details" name="details" rows="5" placeholder="Inclua informações que possam ajudar a localizar sua conta ou justificar o pedido." required></textarea>
+                    <span class="error" id="detailsError"></span>
+                </label>
+
+                <label class="consent">
+                    <input type="checkbox" id="confirmation" required>
+                    <span>
+                        Confirmo que sou o titular da conta, compreendo que esta ação é irreversível e autorizo a
+                        Itup a excluir permanentemente meus dados.
+                    </span>
+                </label>
+                <span class="error" id="confirmationError"></span>
+
+                <div class="actions">
+                    <button type="submit" id="submitBtn" disabled>Enviar solicitação</button>
                 </div>
             </form>
-        </div>
+        </section>
 
-        <div class="help-section">
-            <h4>Precisa de ajuda?</h4>
-            <p>Se você está enfrentando problemas com sua conta, nossa equipe de suporte pode ajudar.</p>
-            <a href="#" class="help-link">
-                <i class="fas fa-headset"></i>
-                Contatar Suporte
-            </a>
-        </div>
+        <section class="support">
+            <h3>Precisa falar com alguém?</h3>
+            <p>Converse com nosso time no portal de suporte caso prefira acompanhamento personalizado.</p>
+        </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite">
+        Solicitação preparada. Verifique seu aplicativo de e-mail.
     </div>
 
-    <!-- Modal de Confirmação Final -->
-    <div id="confirmModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Confirmação Final</h3>
-            </div>
-            <div class="modal-body">
-                <div class="warning-icon-modal">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-                <p>Você tem certeza absoluta que deseja excluir sua conta?</p>
-                <p class="modal-warning">Esta é sua última chance de cancelar esta ação.</p>
-            </div>
-            <div class="modal-actions">
-                <button type="button" class="btn-secondary" onclick="closeModal()">
-                    Não, manter conta
-                </button>
-                <button type="button" class="btn-danger" onclick="confirmDeletion()">
-                    Sim, excluir definitivamente
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de Processamento -->
-    <div id="loadingModal" class="modal">
-        <div class="modal-content loading-modal">
-            <div class="spinner"></div>
-            <p>Processando exclusão da conta...</p>
-        </div>
-    </div>
-
-    <script src="teladeexclusao.js"></script>
+    <script src="teladeexclusao.js" defer></script>
 </body>
 </html>
